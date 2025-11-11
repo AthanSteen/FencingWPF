@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using FencingWPF.Models;
@@ -174,9 +175,23 @@ namespace FencingWPF
                     }
                 }
 
-                // Do not auto-set opposite cell to 0 — leave it blank until user enters
                 RecalculateStats();
             };
+
+            dgPoule.PreviewKeyDown += (s, e) =>
+            {
+                if (e.Key == System.Windows.Input.Key.Enter)
+                {
+                    e.Handled = true; // prevent default move
+                    var dataGrid = s as DataGrid;
+                    if (dataGrid.CurrentCell.IsValid)
+                    {
+                        dataGrid.CommitEdit(DataGridEditingUnit.Cell, true);
+                        dataGrid.UnselectAllCells();
+                    }
+                }
+            };
+
         }
 
 
@@ -268,5 +283,73 @@ namespace FencingWPF
                 row.I = row.TR == 0 ? row.TS : row.TS - row.TR;
             }
         }
+
+        private void btnFinalizePoule_Click(object sender, RoutedEventArgs e)
+        {
+            // Here you export the poule results as needed to a excel
+        }
+
+        private void btnExportCsv_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // Prepare a SaveFileDialog for the user
+                var saveFileDialog = new Microsoft.Win32.SaveFileDialog
+                {
+                    Filter = "CSV Files (*.csv)|*.csv",
+                    FileName = "PouleResults.csv"
+                };
+
+                if (saveFileDialog.ShowDialog() != true)
+                    return;
+
+                var rows = dgPoule.ItemsSource.Cast<PouleRow>().ToList();
+                if (rows.Count == 0)
+                {
+                    MessageBox.Show("No data to export.", "Export", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
+
+                var sb = new StringBuilder();
+
+                // Header row: Player + opponent IDs + stats
+                sb.Append("Player");
+                for (int i = 0; i < rows.Count; i++)
+                    sb.Append($",P{i + 1}");
+                sb.Append(",V,VM,TS,TR,I");
+                sb.AppendLine();
+
+                // Each player’s data
+                foreach (var row in rows)
+                {
+                    sb.Append(row.Player.FullName.Replace(",", " ")); // avoid commas inside names
+
+                    for (int i = 0; i < rows.Count; i++)
+                    {
+                        var val = row.Scores[i]?.ToString() ?? "";
+                        sb.Append($",{val}");
+                    }
+
+                    sb.Append($",{row.V},{row.VM},{row.TS},{row.TR},{row.I}");
+                    sb.AppendLine();
+                }
+
+                System.IO.File.WriteAllText(saveFileDialog.FileName, sb.ToString(), Encoding.UTF8);
+
+                MessageBox.Show("Poule exported successfully!", "Export CSV", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error exporting CSV:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void btnShowResults_Click(object sender, RoutedEventArgs e)
+        {
+            var rows = dgPoule.ItemsSource.Cast<PouleRow>().ToList();
+            var resultsWindow = new ResultsWindow(rows);
+            resultsWindow.ShowDialog();
+        }
+
     }
 }

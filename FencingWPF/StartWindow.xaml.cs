@@ -89,11 +89,17 @@ namespace FencingWPF
 
         private void btnStart_Click(object sender, RoutedEventArgs e)
         {
-            if (_players.Count < 1) return;
+            if (_players.Count < 2)
+            {
+                ShowError("You need at least 2 players to start the tournament!");
+                return;
+            }
 
+            HideError(); // hide any previous errors
             var poule = new PouleWindow(_players);
             poule.Show();
         }
+
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {

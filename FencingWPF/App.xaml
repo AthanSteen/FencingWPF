@@ -46,7 +46,7 @@
             <Setter Property="GridLinesVisibility" Value="All"/>
             <Setter Property="HeadersVisibility" Value="All"/>
             <Setter Property="RowHeaderWidth" Value="150"/>
-            <Setter Property="AlternatingRowBackground" Value="#DFF9FB"/>
+            <!--<Setter Property="AlternatingRowBackground" Value="#DFF9FB"/>-->
         </Style>
     </Application.Resources>
 </Application>

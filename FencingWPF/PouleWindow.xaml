@@ -19,6 +19,8 @@
             <ComboBox x:Name="cbWinner" Width="150" SelectionChanged="ComboBoxPlayer_SelectionChanged">
                 <ComboBox.ItemContainerStyle>
                     <Style TargetType="ComboBoxItem">
+                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
                         <Setter Property="IsEnabled" Value="{Binding IsEnabled}"/>
                         <Setter Property="Foreground" Value="Black"/>
                         <Style.Triggers>
@@ -37,6 +39,8 @@
             <ComboBox x:Name="cbLoser" Width="150" SelectionChanged="ComboBoxPlayer_SelectionChanged">
                 <ComboBox.ItemContainerStyle>
                     <Style TargetType="ComboBoxItem">
+                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
                         <Setter Property="IsEnabled" Value="{Binding IsEnabled}"/>
                         <Setter Property="Foreground" Value="Black"/>
                         <Style.Triggers>
@@ -48,8 +52,10 @@
                     </Style>
                 </ComboBox.ItemContainerStyle>
             </ComboBox>
-
+            
             <Button Content="Add Match" Width="120" Height="32" Click="btnAddMatch_Click"/>
+            <Button Content="Export CSV" Width="120" Height="32" Margin="10,0,0,0" Click="btnExportCsv_Click" Background="#FF2EB65E"/>
+            <Button Content="Show Final Results" Width="150" Height="32" Margin="10,0,0,0" Click="btnShowResults_Click"/>
         </StackPanel>
 
         <!-- Data grid -->
@@ -63,7 +69,7 @@
                   CanUserAddRows="False"
                   CanUserDeleteRows="False"
                   CanUserSortColumns="False"
-                  CanUserReorderColumns="False">
+                  CanUserReorderColumns="False" SelectionUnit="Cell" SelectionMode="Single">
             
             <DataGrid.RowHeaderStyle>
                 <Style TargetType="DataGridRowHeader">

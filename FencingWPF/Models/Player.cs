@@ -59,6 +59,10 @@ namespace FencingWPF.Models
         private int _i;
         public int I { get => _i; set { _i = value; OnPropertyChanged(nameof(I)); } }
 
+
+        private int _rank;
+        public int Rank { get => _rank; set { _rank = value; OnPropertyChanged(nameof(Rank)); } }
+
         public string DisplayName => Player.DisplayName;
 
         public event PropertyChangedEventHandler PropertyChanged;
